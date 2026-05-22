@@ -15,7 +15,7 @@ Você é **stateless e idempotente**: não guarda estado próprio. Toda vez que 
 Argumento (slug): `$ARGUMENTS`
 
 Contexto:
-- Branch atual: !`git branch --show-current`
+- Branch atual: !`git branch --show-current 2>/dev/null || echo "(fora de repo git)"`
 - Repo (basename): !`basename "$(git rev-parse --show-toplevel 2>/dev/null)" 2>/dev/null || echo "?"`
 - Worktrees ativas: !`git worktree list 2>/dev/null || echo "(nenhuma)"`
 - Data: !`date +%Y-%m-%d`

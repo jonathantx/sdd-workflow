@@ -11,7 +11,7 @@ Você gera o **PRD (Product Requirements Document)** de uma feature, no workflow
 Argumento recebido (slug da feature): `$ARGUMENTS`
 
 Contexto carregado automaticamente:
-- Branch atual: !`git branch --show-current`
+- Branch atual: !`git branch --show-current 2>/dev/null || echo "(fora de repo git)"`
 - Data: !`date +%Y-%m-%d`
 - Features candidatas: !`find docs/changes -maxdepth 1 -type d -name 'feat-*' 2>/dev/null || echo "(nenhuma)"`
 
@@ -148,10 +148,12 @@ approved_at: null
 
 ## Fase 6 — Branch, README e commit
 
-1. **Branch.** Verifique se a branch `feat/{slug}` existe (`git branch --list feat/{slug}`).
-   - Se não existe: crie a partir da `main` atualizada — `git checkout main && git pull && git checkout -b feat/{slug}`.
-   - Se já existe: faça checkout nela.
-   - (Se houver mudanças não commitadas que impeçam o checkout, pare e avise o usuário em vez de forçar.)
+1. **Git.** Verifique se o projeto está dentro de um repositório Git: `git rev-parse --is-inside-work-tree`.
+   - Se **não** estiver em um repo Git: NÃO rode `git init` automaticamente, NÃO apague nada e NÃO bloqueie a geração do PRD. Prossiga criando/atualizando os arquivos de documentação, pule branch/commit e avise no final: "Este projeto ainda não é um repositório Git. Para usar branches/commits do fluxo, rode `git init`, faça um commit inicial e então continue."
+   - Se estiver em repo Git: verifique se a branch `feat/{slug}` existe (`git branch --list feat/{slug}`).
+     - Se não existe: crie a partir da `main` atualizada — `git checkout main && git pull && git checkout -b feat/{slug}`.
+     - Se já existe: faça checkout nela.
+     - Se houver mudanças não commitadas que impeçam o checkout, pare e avise o usuário em vez de forçar.
 
 2. **README da change (dossiê vivo).** Crie ou atualize `docs/changes/{pasta}/README.md`. Se não existe, crie com este formato; se existe, atualize o sumário de arquivos e o estado.
 
@@ -181,7 +183,7 @@ delivered_at: null
 feat/{slug}
 ```
 
-3. **Commit.** Adicione os artefatos da change e commite, em conventional commits, usando o slug como escopo:
+3. **Commit.** Só se o projeto estiver em repo Git. Adicione os artefatos da change e commite, em conventional commits, usando o slug como escopo:
 ```
 git add docs/changes/{pasta}/
 git commit -m "docs({slug}): add 01-PRD"
@@ -195,7 +197,7 @@ git commit -m "docs({slug}): add 01-PRD"
 Mostre ao usuário, de forma concisa:
 
 1. Caminho do `01-PRD.md` criado e número de linhas.
-2. Branch ativa (`feat/{slug}`).
+2. Branch ativa (`feat/{slug}`), ou informe que branch/commit foram pulados porque o projeto ainda não está em Git.
 3. Se há marcadores `[a confirmar]` ou decisões em aberto, liste-os brevemente — são o que ele precisa resolver/validar.
 4. **Validação:** lembre que o PRD está `status: draft`. Para aprovar, ele revisa o arquivo e muda o frontmatter para `status: approved` + preenche `approved_by`. (No fluxo atual a validação é dele mesmo — opção "adiar" a revisão formal de negócio.)
 5. **Próximo passo:** `/spec {slug}` — mas só depois do PRD estar `approved`.

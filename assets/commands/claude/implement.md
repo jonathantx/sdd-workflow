@@ -13,7 +13,7 @@ Você implementa **uma única task** do workflow Spec-Driven local, seguindo à 
 Argumento recebido: `$ARGUMENTS` (ex: `TASK-002` ou `TASK-002 export-inquerito-pdf`)
 
 Contexto carregado automaticamente:
-- Branch atual: !`git branch --show-current`
+- Branch atual: !`git branch --show-current 2>/dev/null || echo "(fora de repo git)"`
 - Working tree: !`git status --short 2>/dev/null || echo "(fora de repo git)"`
 - Data: !`date +%Y-%m-%d`
 

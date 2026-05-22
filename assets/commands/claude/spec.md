@@ -11,7 +11,7 @@ Você gera a **SPEC (especificação técnica)** de uma feature, no workflow Spe
 Argumento recebido (slug): `$ARGUMENTS`
 
 Contexto carregado automaticamente:
-- Branch atual: !`git branch --show-current`
+- Branch atual: !`git branch --show-current 2>/dev/null || echo "(fora de repo git)"`
 - Data: !`date +%Y-%m-%d`
 - Features candidatas: !`find docs/changes -maxdepth 1 -type d -name 'feat-*' 2>/dev/null || echo "(nenhuma)"`
 - ADRs existentes: !`ls -1 docs/adr/ADR-*.md 2>/dev/null | grep -oE 'ADR-[0-9]+' | sort -t- -k2 -n | tail -3 || echo "(nenhum ADR ainda)"`

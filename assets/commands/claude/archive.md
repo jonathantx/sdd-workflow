@@ -11,7 +11,7 @@ Você fecha uma change concluída no workflow Spec-Driven local. Três responsab
 Argumento (slug): `$ARGUMENTS`
 
 Contexto:
-- Branch atual: !`git branch --show-current`
+- Branch atual: !`git branch --show-current 2>/dev/null || echo "(fora de repo git)"`
 - Data: !`date +%Y-%m-%d`
 - Changes candidatas: !`find docs/changes -maxdepth 1 -mindepth 1 -type d 2>/dev/null | sort || echo "(nenhuma)"`
 

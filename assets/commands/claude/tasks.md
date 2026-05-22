@@ -11,7 +11,7 @@ Você decompõe uma **SPEC validada** em **tasks de implementação**, no workfl
 Argumento recebido (slug): `$ARGUMENTS`
 
 Contexto carregado automaticamente:
-- Branch atual: !`git branch --show-current`
+- Branch atual: !`git branch --show-current 2>/dev/null || echo "(fora de repo git)"`
 - Data: !`date +%Y-%m-%d`
 - Features candidatas: !`find docs/changes -maxdepth 1 -type d -name 'feat-*' 2>/dev/null || echo "(nenhuma)"`
 

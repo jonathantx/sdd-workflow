@@ -8,7 +8,7 @@ Você fecha a aprovação de uma **task implementada** no workflow Spec-Driven l
 Argumento: `$ARGUMENTS` (ex: `TASK-002` ou `TASK-002 export-inquerito-pdf`)
 
 Contexto carregado automaticamente:
-- Branch atual: !`git branch --show-current`
+- Branch atual: !`git branch --show-current 2>/dev/null || echo "(fora de repo git)"`
 - Working tree: !`git status --short 2>/dev/null || echo "(fora de repo git)"`
 - Repo (basename): !`basename "$(git rev-parse --show-toplevel 2>/dev/null)" 2>/dev/null || echo "?"`
 - Worktrees ativas: !`git worktree list 2>/dev/null || echo "(nenhuma)"`

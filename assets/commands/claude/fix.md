@@ -11,7 +11,7 @@ Você executa o **fluxo direto de correção** do workflow Spec-Driven local. Um
 Argumento (slug): `$ARGUMENTS`
 
 Contexto:
-- Branch atual: !`git branch --show-current`
+- Branch atual: !`git branch --show-current 2>/dev/null || echo "(fora de repo git)"`
 - Working tree: !`git status --short 2>/dev/null || echo "(fora de repo)"`
 - Data: !`date +%Y-%m-%d`
 - Fixes candidatos: !`find docs/changes -maxdepth 1 -type d -name 'fix-*' 2>/dev/null | sort || echo "(nenhum)"`

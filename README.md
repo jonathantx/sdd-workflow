@@ -22,6 +22,18 @@ Use este workflow quando você quer:
 
 O estado do trabalho fica em arquivos Markdown dentro do projeto. Não depende de Jira, Linear, Trello ou banco externo.
 
+## Pré-requisito Recomendado
+
+Use o workflow dentro de um repositório Git. Os comandos conseguem gerar arquivos sem Git, mas branch, commit e histórico rastreável só funcionam depois de inicializar o projeto:
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+```
+
+O instalador **não** apaga `.git` e **não** roda `git init` automaticamente. Isso é intencional: o controle do histórico do projeto deve ficar com você.
+
 ## Instalação
 
 Entre no projeto onde você quer instalar o workflow:
@@ -30,10 +42,38 @@ Entre no projeto onde você quer instalar o workflow:
 cd meu-projeto
 ```
 
+Instalação direta via terminal:
+
+```bash
+curl -fsSL https://install.jonathanteixeira.com.br/install.sh | bash -s -- sdd-workflow
+```
+
+Instalar tudo:
+
+```bash
+curl -fsSL https://install.jonathanteixeira.com.br/install.sh | bash -s -- sdd-workflow --all
+```
+
+Instalar somente com Claude Code:
+
+```bash
+curl -fsSL https://install.jonathanteixeira.com.br/install.sh | bash -s -- sdd-workflow --claude
+```
+
+Fallback direto pelo GitHub:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/jonathantx/sdd-workflow/main/install-remote.sh | bash -s -- --all
+```
+
+O endpoint `install.jonathanteixeira.com.br/install.sh` é um instalador central. Ele recebe o nome do pacote (`sdd-workflow`) e encaminha para o instalador remoto deste repositório.
+
+### Instalação Manual
+
 Clone este repositório em uma pasta local:
 
 ```bash
-git clone https://github.com/SEU_USUARIO/sdd-workflow.git ~/.sdd-workflow
+git clone https://github.com/jonathantx/sdd-workflow.git ~/.sdd-workflow
 ```
 
 Instale o workflow básico:
@@ -61,6 +101,13 @@ Se você já clonou antes e quer atualizar:
 
 ```bash
 git -C ~/.sdd-workflow pull
+```
+
+Se o repositório estiver em outro usuário/org, você pode sobrescrever a origem:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/jonathantx/sdd-workflow/main/install-remote.sh \
+  | SDD_WORKFLOW_REPO=https://github.com/jonathantx/sdd-workflow.git bash -s -- --all
 ```
 
 ## O Que É Instalado
@@ -247,7 +294,7 @@ git init
 git add .
 git commit -m "Initial SDD workflow"
 git branch -M main
-git remote add origin git@github.com:SEU_USUARIO/sdd-workflow.git
+git remote add origin git@github.com:jonathantx/sdd-workflow.git
 git push -u origin main
 ```
 
@@ -255,7 +302,35 @@ Depois disso, qualquer projeto pode instalar com:
 
 ```bash
 cd meu-projeto
-git clone https://github.com/SEU_USUARIO/sdd-workflow.git ~/.sdd-workflow
-~/.sdd-workflow/install.sh --all
+curl -fsSL https://install.jonathanteixeira.com.br/install.sh | bash -s -- sdd-workflow --all
 ```
 
+## Deploy Do Instalador Central
+
+O instalador central vive em:
+
+```text
+cloudflare/install-worker/
+```
+
+Ele serve:
+
+```text
+https://install.jonathanteixeira.com.br/
+https://install.jonathanteixeira.com.br/install.sh
+```
+
+Para publicar na Cloudflare:
+
+```bash
+cd cloudflare/install-worker
+npm install
+npx wrangler login
+npx wrangler deploy
+```
+
+O Worker usa Custom Domain:
+
+```text
+install.jonathanteixeira.com.br
+```
