@@ -122,15 +122,15 @@ if [[ "$INSTALL_FUMADOCS" -eq 1 ]]; then
   copy_dir "$KIT_DIR/assets/templates/fumadocs" "$ROOT_DIR/docs-fumadocs"
   write_file "$ROOT_DIR/Dockerfile.fumadocs" "FROM node:20-slim
 WORKDIR /app
-COPY docs-fumadocs/package*.json ./
+COPY package*.json ./
 RUN npm install
-COPY docs-fumadocs/ ./
+COPY . ./
 EXPOSE 3000
 CMD [\"npm\", \"run\", \"dev\"]"
   append_compose_service_once "docs-fumadocs" "  docs-fumadocs:
     build:
-      context: .
-      dockerfile: Dockerfile.fumadocs
+      context: ./docs-fumadocs
+      dockerfile: ../Dockerfile.fumadocs
     ports:
       - \"8801:3000\"
     volumes:
@@ -143,12 +143,12 @@ fi
 if [[ "$INSTALL_SCALAR" -eq 1 ]]; then
   copy_dir "$KIT_DIR/assets/templates/scalar" "$ROOT_DIR/scalar"
   write_file "$ROOT_DIR/Dockerfile.scalar" "FROM nginx:alpine
-COPY scalar/ /usr/share/nginx/html/
+COPY . /usr/share/nginx/html/
 EXPOSE 80"
   append_compose_service_once "scalar" "  scalar:
     build:
-      context: .
-      dockerfile: Dockerfile.scalar
+      context: ./scalar
+      dockerfile: ../Dockerfile.scalar
     ports:
       - \"8802:80\"
     volumes:

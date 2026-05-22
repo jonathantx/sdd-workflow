@@ -85,6 +85,7 @@ Crie a pasta `docs/changes/{pasta}/tasks/` e, dentro, um arquivo por task: `TASK
 ```markdown
 ---
 type: task
+title: "TASK-NNN — {Título curto da task}"
 id: TASK-NNN
 slug: {slug-da-feature}
 spec: ../02-SPEC.md
@@ -161,6 +162,7 @@ Após validar o conjunto de tasks, gere um arquivo `03-PLAN-EXEC.md` na raiz `do
 ```markdown
 ---
 type: plan
+title: "PLAN-EXEC — {Título da feature}"
 slug: {slug-da-feature}
 spec: ../02-SPEC.md
 generated_at: {data-e-hora}

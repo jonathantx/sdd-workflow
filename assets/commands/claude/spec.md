@@ -85,6 +85,7 @@ Crie `docs/changes/{pasta}/02-SPEC.md` com o template. A seção "Estratégia de
 ```markdown
 ---
 type: spec
+title: "SPEC — {Título da feature}"
 kind: feature
 slug: {slug}
 status: draft
@@ -150,6 +151,11 @@ Para cada candidato a ADR do subagent B:
 2. Crie `docs/adr/ADR-NNN-{slug-curto}.md`:
 
 ```markdown
+---
+title: "ADR-NNN - {Título da decisão}"
+description: "{Resumo curto da decisão arquitetural}"
+---
+
 # ADR-NNN — {Título da decisão}
 
 **Status:** Aceito

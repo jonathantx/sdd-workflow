@@ -122,6 +122,7 @@ Crie `docs/changes/{nome-da-pasta}/00-idea.md` usando o template do tipo corresp
 ```markdown
 ---
 type: change
+title: "{Título legível da feature}"
 kind: feature
 slug: {slug}
 status: draft
@@ -157,6 +158,7 @@ created: {YYYY-MM-DD}
 ```markdown
 ---
 type: change
+title: "FIX — {Título do problema}"
 kind: fix
 slug: {slug}
 status: draft
@@ -194,6 +196,7 @@ created: {YYYY-MM-DD}
 ```markdown
 ---
 type: change
+title: "CHORE — {Título da manutenção}"
 kind: chore
 slug: {slug}
 status: draft

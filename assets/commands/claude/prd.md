@@ -83,6 +83,7 @@ Crie `docs/changes/{pasta}/01-PRD.md` usando o template abaixo. Preencha com bas
 ```markdown
 ---
 type: prd
+title: "PRD — {Título da feature}"
 kind: feature
 slug: {slug}
 status: draft
@@ -160,6 +161,7 @@ approved_at: null
 ```markdown
 ---
 type: change
+title: "{Título da feature}"
 kind: feature
 slug: {slug}
 status: draft

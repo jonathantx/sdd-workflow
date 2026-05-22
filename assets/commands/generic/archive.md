@@ -72,6 +72,7 @@ Atualize `docs/changes/{pasta}/README.md` para a versão final. Para FEATURE:
 ```markdown
 ---
 type: change
+title: "{Título da feature}"
 kind: feature
 slug: {slug}
 status: delivered
@@ -130,11 +131,15 @@ Esta é a parte que mantém a doc honesta. Trabalhe em três camadas (Diátaxis)
 
 - **reference/** — se a change mexeu em API, endpoints, permissions, schema, config: atualize as tabelas/listas correspondentes. Baseie-se no diff real (ex: permission nova no seeder → linha nova em `reference/permissions.md`).
 
+- **scalar/openapi.yaml** — se a change mexeu em rotas HTTP, endpoints, payloads, status codes ou contrato de API e `scalar/openapi.yaml` existe, atualize o OpenAPI junto com `reference/`. Não deixe o Scalar com placeholder ou contrato divergente do app.
+
 - **guides/** — se a change introduz algo que o usuário final faz (um novo fluxo, botão, capacidade): atualize o guia existente OU crie um guia novo passo-a-passo. Guias são didáticos e em linguagem do usuário, não do dev.
 
 - **explanation/** — se a change altera a arquitetura ou introduz um padrão estrutural novo: atualize `explanation/architecture.md` (com diagrama Mermaid se ajudar) e referencie os ADRs relevantes. Mudanças pequenas raramente tocam aqui.
 
 Para cada arquivo que você criar/editar, faça edição cirúrgica e fiel ao que mudou. Se não houver nada a atualizar numa camada, não invente conteúdo só para preencher.
+
+**Contrato de publicação Fumadocs:** todo `.md` publicado em `docs/` deve ter frontmatter YAML com `title` string. Isso inclui `docs/changes/**` (`00-idea.md`, `01-PRD.md`, `02-SPEC.md`, `03-PLAN-EXEC.md`, `README.md`, `tasks/*.md`, `FIX.md`, `NOTE.md`) e `docs/adr/*.md`. Se criar ou tocar um Markdown sem `title`, corrija antes de commitar.
 
 ---
 
@@ -151,12 +156,63 @@ Agrupe por data. Se já houver entradas da mesma data, adicione à seção exist
 
 ---
 
+## Fase 5.5 — Validar publicação da documentação
+
+Antes de commitar, rode validações rápidas para pegar drift de documentação:
+
+1. **Frontmatter publicável:** valide que todo Markdown em `docs/` tem `title` no frontmatter. Rode:
+   ```
+   node - <<'NODE'
+   const fs = require('fs');
+   const path = require('path');
+   let failed = false;
+   function walk(dir) {
+     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+       const file = path.join(dir, entry.name);
+       if (entry.isDirectory()) walk(file);
+       else if (file.endsWith('.md')) {
+         const text = fs.readFileSync(file, 'utf8');
+         const frontmatter = text.startsWith('---\n') ? text.split(/^---\s*$/m)[1] || '' : '';
+         if (!/^title:\s*.+$/m.test(frontmatter)) {
+           console.error(`[docs] missing frontmatter title: ${file}`);
+           failed = true;
+         }
+       }
+     }
+   }
+   walk('docs');
+   process.exit(failed ? 1 : 0);
+   NODE
+   ```
+   Se algum arquivo falhar, adicione `title` e rode de novo.
+2. **Fumadocs, quando instalado:** se `docker-compose.sdd.yml` e `docs-fumadocs/` existem, rode:
+   ```
+   docker compose -f docker-compose.sdd.yml build docs-fumadocs
+   docker compose -f docker-compose.sdd.yml up -d docs-fumadocs
+   curl -fsS http://localhost:8801/docs >/dev/null
+   ```
+   Também valide por `curl` pelo menos uma página da change arquivada e uma página de ADR, se existirem.
+3. **Scalar, quando instalado:** se `docker-compose.sdd.yml` e `scalar/openapi.yaml` existem, rode:
+   ```
+   docker compose -f docker-compose.sdd.yml build scalar
+   docker compose -f docker-compose.sdd.yml up -d scalar
+   curl -fsS http://localhost:8802 >/dev/null
+   curl -fsS http://localhost:8802/openapi.yaml >/dev/null
+   ```
+   Se a change mexeu em API/endpoints, confirme que `scalar/openapi.yaml` não é o placeholder inicial e descreve as rotas reais.
+
+Se alguma validação falhar, corrija a doc ou o setup de preview antes da Fase 6.
+
+---
+
 ## Fase 6 — Marcar entregue e commitar
 
 1. Confirme que o frontmatter do README está com `status: delivered` e `delivered_at` preenchido.
-2. Commit na branch `feat/{slug}` (ou a branch da change):
+2. Se `scalar/openapi.yaml` foi alterado, inclua-o no commit junto com `docs/`.
+3. Commit na branch `feat/{slug}` (ou a branch da change):
    ```
    git add docs/
+   test ! -f scalar/openapi.yaml || git add scalar/openapi.yaml
    git commit -m "docs({slug}): archive — dossiê, sync de docs e changelog"
    ```
 

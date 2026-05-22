@@ -53,6 +53,7 @@ Crie `docs/changes/{pasta}/FIX.md`:
 ```markdown
 ---
 type: change
+title: "FIX — {Título do problema}"
 kind: fix
 slug: {slug}
 status: draft

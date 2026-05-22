@@ -270,6 +270,8 @@ Por padrão, ele lê:
 scalar/openapi.yaml
 ```
 
+O `/archive` deve manter esse arquivo sincronizado quando uma change altera rotas, endpoints ou contrato de API. O arquivo inicial é só um placeholder; não trate como documentação final do projeto.
+
 Se seu backend expõe OpenAPI em `/openapi.json`, abra:
 
 ```text

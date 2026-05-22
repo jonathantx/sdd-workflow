@@ -156,8 +156,9 @@ Para manutenção sem decisão (deps, refactor, config). Muitas vezes só um com
 6. **Recurso compartilhado → sequencial.** Migrations, rotas e configs globais não rodam em paralelo.
 7. **Rollback não é opcional.** Toda SPEC responde "como desfazer".
 8. **Doc anda junto.** Nenhuma change fecha sem `/archive`.
-9. **Manual antes de automático.** Só automatize o que doeu 3 vezes.
-10. **Revise cada lote (Fluxo 1a) ou o resultado final (Fluxo 1b).** A IA implementa; você aprova — entre cada lote no manual, ou no fim do batch quando rodando autônomo.
+9. **Doc publicada precisa renderizar.** Markdown em `docs/` precisa de `title` no frontmatter; se Fumadocs/Scalar estiverem instalados, `/archive` valida o preview e o OpenAPI antes do commit.
+10. **Manual antes de automático.** Só automatize o que doeu 3 vezes.
+11. **Revise cada lote (Fluxo 1a) ou o resultado final (Fluxo 1b).** A IA implementa; você aprova — entre cada lote no manual, ou no fim do batch quando rodando autônomo.
 
 ---
 
