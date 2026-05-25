@@ -71,6 +71,7 @@ docs/
 | `/approve-task <TASK>` | Após revisar, mergeia a task, marca `done` e limpa worktree+banco (usado pelo `/preparar-lote`) |
 | `/fix <slug>` | Fluxo direto de correção (diagnóstico + plano + implementação) |
 | `/status [slug]` | Mostra onde cada change está e qual a próxima ação (read-only) |
+| `/document-api [escopo]` | Gera o `scalar/openapi.yaml` a partir do código (rotas REST e/ou SvelteKit remote functions) para o Scalar renderizar |
 | `/archive <slug>` | Fecha a change: dossiê final, sincroniza docs e atualiza CHANGELOG |
 
 ---
@@ -143,6 +144,24 @@ Para manutenção sem decisão (deps, refactor, config). Muitas vezes só um com
 # se trivial: implementa e commita direto
 # se relevante documentar: gera NOTE.md, depois /archive
 ```
+
+---
+
+## Documentação de API (Scalar)
+
+O Scalar (porta 8802) só renderiza um `openapi.yaml` — ele não gera nada sozinho. Quem produz esse arquivo a partir do código é o `/document-api`:
+
+```bash
+/document-api            # gera scalar/openapi.yaml da API inteira
+/document-api booking    # restringe a um módulo/escopo
+```
+
+Ele detecta a stack (lê a constitution e `docs/patterns/`) e cobre dois casos:
+
+- **REST tradicional** (`+server.ts`, controllers Laravel, Express): extrai rotas + schemas de validação e emite OpenAPI nativo.
+- **SvelteKit remote functions** (`src/lib/remote/*.remote.ts` com Valibot): como são RPC e não REST, cada `query`/`command` vira uma operation sob o path sintético `/_remote/{módulo}/{export}` (método `POST`), marcada com a extension `x-sdd-remote`. Assim o Scalar tem o que mostrar mesmo sem rotas REST.
+
+`/document-api` regenera o contrato do zero a partir do código. O `/archive` mantém o `scalar/openapi.yaml` sincronizado de forma incremental quando uma change mexe em API.
 
 ---
 

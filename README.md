@@ -270,7 +270,19 @@ Por padrão, ele lê:
 scalar/openapi.yaml
 ```
 
-O `/archive` deve manter esse arquivo sincronizado quando uma change altera rotas, endpoints ou contrato de API. O arquivo inicial é só um placeholder; não trate como documentação final do projeto.
+O Scalar **não gera** esse arquivo — ele só renderiza. Para gerá-lo a partir do código do projeto, use o comando `/document-api`:
+
+```text
+/document-api            # gera scalar/openapi.yaml da API inteira
+/document-api booking    # restringe a um módulo/escopo
+```
+
+Ele detecta a stack (lê a constitution e `docs/patterns/`) e funciona em dois casos:
+
+- **REST tradicional** (`+server.ts`, controllers Laravel, Express): extrai rotas e schemas e emite OpenAPI nativo.
+- **SvelteKit remote functions** (`src/lib/remote/*.remote.ts` com Valibot): como são RPC e não REST, cada `query`/`command` vira uma operation sob `/_remote/{módulo}/{export}` (método `POST`, marcada com `x-sdd-remote`), para o Scalar ter o que mostrar.
+
+O `/archive` mantém esse arquivo sincronizado quando uma change altera rotas, endpoints ou contrato de API; o `/document-api` regenera o contrato inteiro a partir do código. O arquivo inicial é só um placeholder; não trate como documentação final do projeto.
 
 Se seu backend expõe OpenAPI em `/openapi.json`, abra:
 
